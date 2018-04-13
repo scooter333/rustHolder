@@ -7,15 +7,15 @@ fn main() {
 }
 
 
-fn read_measurements<R: Read>(reader: R) -> Vec<&str>{
+fn read_measurements<R: Read>(reader: R) -> Vec<String>{
     let mut lines = BufReader::new(reader).lines();
-    let mut holder: Vec<&str> = vec![];
+    let mut holder: Vec<String> = vec![];
     while let Some(Ok(line)) = lines.next() {
         if let Ok(f) = line.parse(){
             holder.push(f);
-            holder
         }
     };
+    holder
 }
 
 
