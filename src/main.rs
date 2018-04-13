@@ -2,54 +2,43 @@ use std::collections::HashMap;
 use std::io::{BufRead, BufReader, Read, stdin, Write, stdout,};
 
 fn main() {
-    let  map = get_freq("Hello, world!");
+    let tester = read_string(stdin());
+    let map = get_freq(tester);
     write_output(stdout(),map);
 }
 
 
-fn read_measurements<R: Read>(reader: R) -> Vec<String>{
-    let mut lines = BufReader::new(reader).lines();
-    let mut holder: Vec<String> = vec![];
-    while let Some(Ok(line)) = lines.next() {
-        if let Ok(f) = line.parse(){
-            holder.push(f);
-        }
-    };
-    holder
+fn read_string<R: Read>(mut reader: R) -> String{
+    // let mut lines = BufReader::new(reader).lines();
+    // let mut holder: Vec<String> = vec![];
+    // while let Some(Ok(line)) = lines.next() {
+    //     if let Ok(f) = line.parse(){
+    //         holder.push(f);
+    //     }
+    // };
+    // holder
+    
+    let mut buffer = String::new();
+    reader.read_to_string(&mut buffer).unwrap();
+    buffer
+
+
 }
 
 
-fn get_freq(given:&str)->HashMap<&str, i32>{
+fn get_freq(given: String)->HashMap<String, i32>{
     let mut freq_map = HashMap::new();
 
     for word in given.split_whitespace(){
-        let count = freq_map.entry(word).or_insert(0);
+        let count = freq_map.entry(word.to_owned()).or_insert(0);
         *count += 1;
     }
 
     freq_map
 }
 
-#[cfg(test)]
-mod count_tests {
-    use super::get_freq;
 
-    #[test]
-    fn hello_world_test(){
-        let test_map = get_freq("Hello world");
-        assert_eq!(test_map.get("Hello"),Some(&1));
-        assert_eq!(test_map.get("world"),Some(&1));
-    }
-
-    #[test]
-    fn bad_entry(){
-        let test_map = get_freq("Hello world");
-        assert_eq!(test_map.get("garbage"),None);
-
-    }
-}
-
-fn write_output<W: Write>(mut writer: W, map:HashMap<&str, i32> ){
+fn write_output<W: Write>(mut writer: W, map:HashMap<String, i32> ){
     if map.is_empty(){
         write!(writer, "Nothing given.\n").unwrap();
     }
@@ -59,6 +48,12 @@ fn write_output<W: Write>(mut writer: W, map:HashMap<&str, i32> ){
         }
     }
 }
+
+
+
+
+
+
 
 #[cfg(test)]
 mod write_output_tests {
@@ -85,6 +80,25 @@ mod write_output_tests {
         let mut writer = Cursor::new(vec![]);
         write_output(&mut writer, results);
         assert_eq!(expected, String::from_utf8(writer.into_inner()).unwrap());
+    }
+}
+
+#[cfg(test)]
+mod count_tests {
+    use super::get_freq;
+
+    #[test]
+    fn hello_world_test(){
+        let test_map = get_freq("Hello world");
+        assert_eq!(test_map.get("Hello"),Some(&1));
+        assert_eq!(test_map.get("world"),Some(&1));
+    }
+
+    #[test]
+    fn bad_entry(){
+        let test_map = get_freq("Hello world");
+        assert_eq!(test_map.get("garbage"),None);
+
     }
 }
 
