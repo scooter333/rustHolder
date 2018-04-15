@@ -11,13 +11,17 @@ fn transform<R: Read, W: Write>(input: R, output: W) {
     write_output(output, count);
 }
 
-fn read_string<R: Read>( reader: R) -> String{
-    let given_lines = BufReader::new(reader).lines();
+fn read_string<R: Read>( mut reader: R) -> String{
+    //let given_lines = BufReader::new(reader).lines();
+    //let mut buffer = String::new();
+    //for line in given_lines {
+     //   buffer = line.unwrap();
+      //  break;
+    //}
+    //buffer
+
     let mut buffer = String::new();
-    for line in given_lines {
-        buffer = line.unwrap();
-        break;
-    }
+    reader.read_to_string(&mut buffer).unwrap();
     buffer
 }
 
@@ -64,7 +68,7 @@ mod read_measurements_tests {
 
     #[test]
     fn read_hello_world() {
-        assert_read("Hello world".to_string(), "Hello world\n");
+        assert_read("Hello world\n".to_string(), "Hello world\n");
     }
 
     fn assert_read(expected: String, input: &str) {
