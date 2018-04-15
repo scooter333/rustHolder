@@ -31,7 +31,10 @@ fn get_freq(given: String)->HashMap<String, i32>{
 
     for word in given.split_whitespace(){
         let count = freq_map.entry(word.to_owned().to_lowercase().replace(",","")
-            .replace(".","").replace("!","").replace("?","")).or_insert(0);
+            .replace(".","").replace("!","").replace("?","").replace(")","")
+            .replace("(","").replace("-","").replace('"',"")
+            .replace(":","").replace(";","").replace('”',"")
+            .replace("“","").replace("[","").replace("]","")).or_insert(0);
         *count += 1;
     }
 
