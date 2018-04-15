@@ -36,12 +36,23 @@ fn get_freq(given: String)->HashMap<String, i32>{
 
 
 fn write_output<W: Write>(mut writer: W, map:HashMap<String, i32> ){
-    if map.is_empty(){
+    let mut map_copy=map.clone();
+    if map_copy.is_empty(){
         write!(writer, "Nothing given.\n").unwrap();
     }
         else {
-            for (key, value) in &map {
-                write!(writer, "{}: {}\n", key, value).unwrap();
+            while ! map_copy.is_empty() {
+                let second_copy = map_copy.clone();
+                let mut max = &0;
+                let mut name= "";
+                for (key, value) in &second_copy {
+                    if value > max{
+                        max = value;
+                        name = key;
+                    }
+                }
+                write!(writer, "{}: {}\n", name, max).unwrap();
+                map_copy.remove(name);
             }
         }
 }
@@ -72,19 +83,30 @@ mod write_output_tests {
     use std::collections::HashMap;
 
     #[test]
-    fn no_measurements_output() {
+    fn no_thing_output() {
         assert_write("Nothing given.\n",
                      HashMap::new());
     }
 
     #[test]
-    fn some_measurements_output() {
+    fn some_data_output() {
         let mut freq_map = HashMap::new();
         freq_map.insert("hello".to_string(),1 as i32);
         assert_write(
             "hello: 1\n",
             freq_map);
     }
+
+    #[test]
+    fn wrtie_order_output() {
+        let mut freq_map = HashMap::new();
+        freq_map.insert("hello".to_string(),2 as i32);
+        freq_map.insert("world".to_string(), 1 as i32);
+        assert_write(
+            "hello: 2\nworld: 1\n",
+            freq_map);
+    }
+
 
     fn assert_write(expected: &str, results: HashMap<String, i32> ) {
         let mut writer = Cursor::new(vec![]);
